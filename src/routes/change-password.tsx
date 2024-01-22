@@ -7,7 +7,6 @@ import {
   Error,
   Form,
   Input,
-  SendEmailBtn,
   Switcher,
   Title,
   Wrapper,

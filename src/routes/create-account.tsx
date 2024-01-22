@@ -1,5 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { Input, Title, Wrapper, Form } from "../components/auth-components";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Input,
+  Title,
+  Wrapper,
+  Form,
+  Switcher,
+  Error,
+} from "../components/auth-components";
 import React, { useState } from "react";
 import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -81,6 +88,13 @@ export default function CreateAccount() {
           value={isLoading ? "Loading..." : "Create Account"}
         />
       </Form>
+      {error !== "" ? <Error>{error}</Error> : null}
+      <Switcher>
+        Already have an account? <Link to="/login">로그인 &rarr;</Link>
+      </Switcher>
+      <Switcher>
+        <Link to="/change-password">Forgot Password?</Link>
+      </Switcher>
     </Wrapper>
   );
 }

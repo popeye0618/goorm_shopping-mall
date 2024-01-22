@@ -5,14 +5,11 @@ import {
   Wrapper,
   Form,
   Switcher,
+  Error,
 } from "../components/auth-components";
 import React, { useState } from "react";
 import { FirebaseError } from "firebase/app";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
 export default function CreateAccount() {
@@ -71,6 +68,7 @@ export default function CreateAccount() {
         />
         <Input type="submit" value={isLoading ? "Loading..." : "Login"} />
       </Form>
+      {error !== "" ? <Error>{error}</Error> : null}
       <Switcher>
         Don't have an account?{" "}
         <Link to="/create-account">계정 만들기 &rarr;</Link>
