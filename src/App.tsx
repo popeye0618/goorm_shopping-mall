@@ -9,6 +9,8 @@ import CreateAccount from "./routes/create-account";
 import ProtectedRoute from "./components/protected-route";
 import Home from "./routes/home";
 import ChangePassword from "./routes/change-password";
+import Cart from "./routes/cart";
+import ProductDetail from "./routes/product-detail";
 
 const router = createBrowserRouter([
   {
@@ -18,14 +20,6 @@ const router = createBrowserRouter([
         <Home />
       </ProtectedRoute>
     ),
-    children: [
-      {
-        path: "/home",
-      },
-      {
-        path: "/",
-      },
-    ],
   },
   {
     path: "/login",
@@ -33,6 +27,18 @@ const router = createBrowserRouter([
   },
   { path: "/create-account", element: <CreateAccount /> },
   { path: "/change-password", element: <ChangePassword /> },
+  {
+    path: "/cart",
+    element: (
+      <ProtectedRoute>
+        <Cart />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/product/:id",
+    element: <ProductDetail />,
+  },
 ]);
 
 const GlobalStyles = createGlobalStyle`

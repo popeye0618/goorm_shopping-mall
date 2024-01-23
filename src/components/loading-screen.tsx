@@ -14,7 +14,7 @@ const Text = styled.span`
 export default function LoadingScreen() {
   return (
     <Wrapper>
-      <Text>Loading...</Text>
+      <Text>페이지로 이동중입니다...</Text>
     </Wrapper>
   );
 }

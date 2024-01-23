@@ -17,6 +17,7 @@ const Wrapper = styled.div`
 const Logo = styled.img`
   width: 80px;
   height: 50px;
+  cursor: pointer;
 `;
 
 const Menu = styled.div`
@@ -47,11 +48,20 @@ export default function Layout() {
       navigate("/login");
     }
   };
+
+  const onLogoClick = () => {
+    navigate("/");
+  };
+
+  const onCartClick = () => {
+    navigate("/Cart");
+  };
+
   return (
     <Wrapper>
-      <Logo src="logo.png" />
+      <Logo src="logo.png" onClick={onLogoClick} />
       <Menu>
-        <MenuItem>
+        <MenuItem onClick={onCartClick}>
           <svg
             fill="none"
             strokeWidth={1.5}

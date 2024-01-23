@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../components/layout";
 import styled from "styled-components";
 import LoadingScreen from "../components/loading-screen";
+import { useNavigate } from "react-router-dom";
 
 export interface Product {
   id: number;
@@ -91,6 +92,12 @@ const GridItem = styled.div`
   }
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  cursor: pointer;
+  transition: transform 0.3 ease, box-shadow 0.3 ease;
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const ProductImg = styled.img`
@@ -129,6 +136,7 @@ const PriceTag = styled.span`
 `;
 
 export default function Home() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState([]);
@@ -164,6 +172,9 @@ export default function Home() {
     };
     fetchProducts();
   }, []);
+  if (error) {
+    alert(error);
+  }
 
   useEffect(() => {
     if (selectedCategory === "all") {
@@ -175,6 +186,22 @@ export default function Home() {
       setFilteredProducts(filtered);
     }
   }, [selectedCategory, products]);
+
+  const onProductClick = (productId: number) => {
+    navigate(`product/${productId}`);
+  };
+
+  const addToCart = (
+    e: React.MouseEvent<HTMLDivElement>,
+    productId: number
+  ) => {
+    e.stopPropagation();
+    console.log(`Product ${productId} added to cart`);
+  };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Wrapper>
@@ -193,7 +220,10 @@ export default function Home() {
         <GridContainer>
           {filteredProducts.map((product) => {
             return (
-              <GridItem key={product.id}>
+              <GridItem
+                key={product.id}
+                onClick={() => onProductClick(product.id)}
+              >
                 <ProductImg src={product.image} />
                 <ProductTitle>
                   {product.title.length > 13
@@ -201,7 +231,9 @@ export default function Home() {
                     : product.title}
                 </ProductTitle>
                 <Div>
-                  <ToCart>장바구니에 담기</ToCart>
+                  <ToCart onClick={(e) => addToCart(e, product.id)}>
+                    장바구니에 담기
+                  </ToCart>
                   <PriceTag>{`$ ${product.price}`}</PriceTag>
                 </Div>
               </GridItem>
