@@ -35,6 +35,7 @@ const List = styled.div`
   justify-content: space-around;
   width: 80%;
   gap: 40px;
+  flex-wrap: wrap;
 `;
 
 const Tag = styled.div`
