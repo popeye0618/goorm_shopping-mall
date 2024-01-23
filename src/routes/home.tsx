@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../features/cart/cartSlice";
 
 export interface Product {
-  id: string;
+  id: number;
   title: string;
   price: number;
   description: string;
@@ -190,7 +190,7 @@ export default function Home() {
     }
   }, [selectedCategory, products]);
 
-  const onProductClick = (productId: string) => {
+  const onProductClick = (productId: number) => {
     navigate(`product/${productId}`);
   };
 

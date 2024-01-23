@@ -29,9 +29,26 @@ export const cartSlice = createSlice({
         state.items.push({ product: action.payload, quantity: 1 });
       }
     },
-    // 다른 리듀서들...
+    decreaseQuantity: (state, action: PayloadAction<number>) => {
+      const existingItem = state.items.find(
+        (item) => item.product.id === action.payload
+      );
+      if (existingItem && existingItem.quantity > 1) {
+        existingItem.quantity -= 1;
+      } else if (existingItem) {
+        state.items = state.items.filter(
+          (item) => item.product.id !== action.payload
+        );
+      }
+    },
+    removeFromCart: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter(
+        (item) => item.product.id !== action.payload
+      );
+    },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, decreaseQuantity, removeFromCart } =
+  cartSlice.actions;
 export default cartSlice.reducer;

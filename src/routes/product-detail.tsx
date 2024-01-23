@@ -86,7 +86,6 @@ export default function ProductDetail() {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
-  const [isClicked, setClicked] = useState(false);
   const getProduct = async () => {
     try {
       setLoading(true);
@@ -94,7 +93,6 @@ export default function ProductDetail() {
         await fetch(`https://fakestoreapi.com/products/${id}`)
       ).json();
       setProduct(product);
-      console.log(product);
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
@@ -121,10 +119,7 @@ export default function ProductDetail() {
 
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart(product));
-    setClicked(true);
-    setTimeout(() => {
-      setClicked(false);
-    }, 2000);
+    alert("장바구니에 담겼습니다.");
   };
 
   return (
@@ -144,7 +139,7 @@ export default function ProductDetail() {
                 handleAddToCart(product);
               }}
             >
-              {isClicked ? "장바구니에 담겼습니다." : "장바구니에 담기"}
+              장바구니에 담기
             </Cartbtn>
             <Cartbtn onClick={onCartClick}>장바구니로 이동</Cartbtn>
           </Btns>

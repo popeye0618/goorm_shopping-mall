@@ -1,7 +1,15 @@
 import styled from "styled-components";
 import Layout from "../components/layout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
+import {
+  addToCart,
+  decreaseQuantity,
+  removeFromCart,
+} from "../features/cart/cartSlice";
+import { Product } from "./home";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,18 +22,31 @@ const Wrapper = styled.div`
 
 const Title = styled.h1`
   font-size: 42px;
+  font-weight: bold;
+`;
+
+const Switcher = styled.div`
+  margin-top: 200px;
+  display: flex;
+  height: auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  font-weight: 600;
 `;
 
 const Caution = styled.h1`
-  margin-top: 200px;
   font-size: 42px;
   font-weight: bold;
+  margin-bottom: 50px;
 `;
 
 const List = styled.div`
   display: flex;
   flex-direction: column;
   width: 90%;
+  height: auto;
   align-items: center;
   margin: 0px 100px;
 `;
@@ -33,11 +54,11 @@ const List = styled.div`
 const MyItem = styled.div`
   display: flex;
   width: 100%;
-  height: 45%;
+  height: 250px;
   align-items: center;
   gap: 40px;
   margin: 10px 0px;
-  padding: 20px 10px;
+  padding: 20px 20px;
   border-bottom: 1px solid #999;
 `;
 
@@ -111,8 +132,68 @@ const DeleteItem = styled.div`
   }
 `;
 
+interface ResultProps {
+  totalPrice: number;
+}
+const Result = styled.div<ResultProps>`
+  display: ${(props) => (props.totalPrice > 0 ? "flex" : "none")};
+  align-items: center;
+  justify-content: center;
+  margin-left: 55%;
+  width: 30%;
+  height: 10%;
+  gap: 30px;
+`;
+
+const Sum = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: beige;
+  font-size: 1.5rem;
+`;
+
+const Pay = styled.div`
+  border: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  height: 100%;
+  color: #999;
+  cursor: pointer;
+  &:hover {
+    background-color: #999;
+    color: white;
+  }
+`;
+
 export default function Cart() {
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const onQuantityClick = (product: Product, change: string) => {
+    if (change === "+") {
+      dispatch(addToCart(product));
+    } else if (change === "-") {
+      dispatch(decreaseQuantity(product.id));
+    }
+  };
+
+  const onDeleteClick = (product: Product) => {
+    dispatch(removeFromCart(product.id));
+  };
+
+  useEffect(() => {
+    const total = cartItems.reduce(
+      (acc, item) => acc + item.product.price * item.quantity,
+      0
+    );
+    setTotalPrice(total);
+  }, [cartItems]);
 
   return (
     <Wrapper>
@@ -120,7 +201,10 @@ export default function Cart() {
       <Title>장바구니</Title>
       <List>
         {cartItems.length === 0 ? (
-          <Caution>장바구니가 비었습니다!</Caution>
+          <Switcher>
+            <Caution>장바구니가 비었습니다!</Caution>
+            <Link to="/">쇼핑하러가기</Link>
+          </Switcher>
         ) : (
           cartItems.map((item, index) => (
             <MyItem key={index}>
@@ -132,16 +216,20 @@ export default function Cart() {
                     ? `${item.product.title.substring(0, 70)}...`
                     : item.product.title}
                 </ProductTitle>
-                <Price>{`${item.product.price} x ${item.quantity} = $ ${
-                  item.product.price * item.quantity
-                }`}</Price>
+                <Price>{`${item.product.price} x ${item.quantity} = $ ${Number(
+                  totalPrice.toFixed(2)
+                )}`}</Price>
               </Description>
               <QuantityContainer>
-                <QuantityBtn>-</QuantityBtn>
+                <QuantityBtn onClick={() => onQuantityClick(item.product, "-")}>
+                  -
+                </QuantityBtn>
                 <Quantity>{item.quantity}</Quantity>
-                <QuantityBtn>+</QuantityBtn>
+                <QuantityBtn onClick={() => onQuantityClick(item.product, "+")}>
+                  +
+                </QuantityBtn>
               </QuantityContainer>
-              <DeleteItem>
+              <DeleteItem onClick={() => onDeleteClick(item.product)}>
                 <svg
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -159,6 +247,10 @@ export default function Cart() {
           ))
         )}
       </List>
+      <Result totalPrice={totalPrice}>
+        <Sum>{`합계: $ ${Number(totalPrice.toFixed(2))}`}</Sum>
+        <Pay>계산하기</Pay>
+      </Result>
     </Wrapper>
   );
 }
