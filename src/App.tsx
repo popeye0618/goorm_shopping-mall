@@ -7,7 +7,6 @@ import reset from "styled-reset";
 import LoadingScreen from "./components/loading-screen";
 import CreateAccount from "./routes/create-account";
 import ProtectedRoute from "./components/protected-route";
-import Layout from "./components/layout";
 import Home from "./routes/home";
 import ChangePassword from "./routes/change-password";
 

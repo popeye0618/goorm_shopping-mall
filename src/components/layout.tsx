@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { auth } from "../firebase";
 
 const Wrapper = styled.div`
   display: flex;
@@ -9,9 +11,13 @@ const Wrapper = styled.div`
   justify-content: space-between;
   border: none;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 0px 15px;
 `;
 
-const Logo = styled.img``;
+const Logo = styled.img`
+  width: 80px;
+  height: 50px;
+`;
 
 const Menu = styled.div`
   display: flex;
@@ -33,9 +39,17 @@ const MenuItem = styled.div`
 `;
 
 export default function Layout() {
+  const navigate = useNavigate();
+  const onLogOut = () => {
+    const ok = confirm("로그아웃 하시겠습니까?");
+    if (ok) {
+      auth.signOut();
+      navigate("/login");
+    }
+  };
   return (
     <Wrapper>
-      <Logo />
+      <Logo src="logo.png" />
       <Menu>
         <MenuItem>
           <svg
@@ -69,7 +83,7 @@ export default function Layout() {
             />
           </svg>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={onLogOut}>
           <svg
             fill="currentColor"
             viewBox="0 0 20 20"
