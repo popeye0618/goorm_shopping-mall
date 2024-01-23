@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import LoadingScreen from "../components/loading-screen";
 import styled from "styled-components";
 import Layout from "../components/layout";
+import { Product } from "./home";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../features/cart/cartSlice";
 
 const Wrapper = styled.div`
   display: flex;
@@ -77,20 +80,13 @@ const Cartbtn = styled.div`
   }
 `;
 
-export interface Product {
-  id: string;
-  image: string;
-  category: string;
-  title: string;
-  price: number;
-  description: string;
-}
-
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
+  const [isClicked, setClicked] = useState(false);
   const getProduct = async () => {
     try {
       setLoading(true);
@@ -123,6 +119,14 @@ export default function ProductDetail() {
     navigate("/Cart");
   };
 
+  const handleAddToCart = (product: Product) => {
+    dispatch(addToCart(product));
+    setClicked(true);
+    setTimeout(() => {
+      setClicked(false);
+    }, 2000);
+  };
+
   return (
     <Wrapper>
       <Layout />
@@ -134,7 +138,14 @@ export default function ProductDetail() {
           <PriceTag>{`$ ${product.price}`}</PriceTag>
           <Description>{product.description}</Description>
           <Btns>
-            <Cartbtn>장바구니에 담기</Cartbtn>
+            <Cartbtn
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(product);
+              }}
+            >
+              {isClicked ? "장바구니에 담겼습니다." : "장바구니에 담기"}
+            </Cartbtn>
             <Cartbtn onClick={onCartClick}>장바구니로 이동</Cartbtn>
           </Btns>
         </ProductDetails>

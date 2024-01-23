@@ -3,9 +3,11 @@ import Layout from "../components/layout";
 import styled from "styled-components";
 import LoadingScreen from "../components/loading-screen";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../features/cart/cartSlice";
 
-export interface Products {
-  id: number;
+export interface Product {
+  id: string;
   title: string;
   price: number;
   description: string;
@@ -137,8 +139,9 @@ const PriceTag = styled.span`
 
 export default function Home() {
   const navigate = useNavigate();
-  const [products, setProducts] = useState<Products[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Products[]>([]);
+  const dispatch = useDispatch();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isLoading, setLoading] = useState(false);
@@ -187,16 +190,13 @@ export default function Home() {
     }
   }, [selectedCategory, products]);
 
-  const onProductClick = (productId: number) => {
+  const onProductClick = (productId: string) => {
     navigate(`product/${productId}`);
   };
 
-  const addToCart = (
-    e: React.MouseEvent<HTMLDivElement>,
-    productId: number
-  ) => {
-    e.stopPropagation();
-    console.log(`Products ${productId} added to cart`);
+  const handleAddToCart = (product: Product) => {
+    dispatch(addToCart(product));
+    alert("장바구니에 담겼습니다.");
   };
 
   if (isLoading) {
@@ -231,7 +231,12 @@ export default function Home() {
                     : product.title}
                 </ProductTitle>
                 <Div>
-                  <ToCart onClick={(e) => addToCart(e, product.id)}>
+                  <ToCart
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                  >
                     장바구니에 담기
                   </ToCart>
                   <PriceTag>{`$ ${product.price}`}</PriceTag>

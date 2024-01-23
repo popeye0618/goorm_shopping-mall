@@ -11,6 +11,8 @@ import Home from "./routes/home";
 import ChangePassword from "./routes/change-password";
 import Cart from "./routes/cart";
 import ProductDetail from "./routes/product-detail";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +39,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/product/:id",
-    element: <ProductDetail />,
+    element: (
+      <ProtectedRoute>
+        <Cart />
+      </ProtectedRoute>
+    ),
   },
 ]);
 
@@ -69,11 +75,11 @@ export default function App() {
     init();
   }, []);
   return (
-    <>
+    <Provider store={store}>
       <Wrapper>
         <GlobalStyles />
         {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
       </Wrapper>
-    </>
+    </Provider>
   );
 }
