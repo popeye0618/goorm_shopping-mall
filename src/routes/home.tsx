@@ -4,7 +4,7 @@ import styled from "styled-components";
 import LoadingScreen from "../components/loading-screen";
 import { useNavigate } from "react-router-dom";
 
-export interface Product {
+export interface Products {
   id: number;
   title: string;
   price: number;
@@ -137,8 +137,8 @@ const PriceTag = styled.span`
 
 export default function Home() {
   const navigate = useNavigate();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Products[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Products[]>([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isLoading, setLoading] = useState(false);
@@ -196,7 +196,7 @@ export default function Home() {
     productId: number
   ) => {
     e.stopPropagation();
-    console.log(`Product ${productId} added to cart`);
+    console.log(`Products ${productId} added to cart`);
   };
 
   if (isLoading) {

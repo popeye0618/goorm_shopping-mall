@@ -59,7 +59,7 @@ export default function Layout() {
 
   return (
     <Wrapper>
-      <Logo src="logo.png" onClick={onLogoClick} />
+      <Logo src="/logo.png" onClick={onLogoClick} />
       <Menu>
         <MenuItem onClick={onCartClick}>
           <svg
